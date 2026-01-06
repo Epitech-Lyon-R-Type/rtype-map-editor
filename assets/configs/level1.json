@@ -1,0 +1,12 @@
+{
+    "game": "./assets/configs/rtype.json",
+    "map": {
+        "id": 1,
+        "scrollSpeed": 2.0,
+        "width": 1920,
+        "height": 1080
+    },
+    "waves": [
+        { "ref": 3, "x": 300, "y": 200 }
+    ]
+}

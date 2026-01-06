@@ -1,0 +1,152 @@
+{
+    "game": "./assets/configs/rtype.json",
+    "sprites": {
+        "PLAYER": "assets/sprites/players.png",
+        "SKIMMER": "assets/sprites/skimmer.png",
+        "MISSILE": "assets/sprites/shoots.png",
+        "SUOTRON": "assets/sprites/suotron.png"
+    },
+    "entities": {
+        "PLAYER": {
+            "tag": {
+                "text": "player1"
+            },
+            "render": {
+                "key": "PLAYER",
+                "rect": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 32,
+                    "h": 32
+                },
+                "layer": 1
+            },
+            "animator": {
+                "IDLE": {
+                    "loop": false,
+                    "animation": {
+                        "frames": 1,
+                        "duration": 0.1
+                    }
+                }
+            }
+        },
+        "SKIMMER": {
+            "render": {
+                "key": "SKIMMER",
+                "rect": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 32,
+                    "h": 32
+                },
+                "layer": 1
+            },
+            "animator": {
+                "IDLE": {
+                    "loop": false,
+                    "animation": {
+                        "frames": 1,
+                        "duration": 0.1
+                    },
+                    "origin": {
+                        "x": 0,
+                        "y": 0
+                    },
+                    "size": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "offset": {
+                        "x": 2,
+                        "y": 0
+                    }
+                }
+            }
+        },
+        "CAMERA": {
+            "position": {
+                "x": 400,
+                "y": 300
+            },
+            "velocity": {
+                "x": 1,
+                "y": 0
+            },
+            "camera": {
+                "zoom": 1.0,
+                "offset": {
+                    "x": 400,
+                    "y": 300
+                }
+            }
+        },
+        "MISSILE": {
+            "render": {
+                "key": "MISSILE",
+                "rect": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 16,
+                    "h": 16
+                },
+                "layer": 1
+            }
+        },
+        "ENEMY_MISSILE": {
+            "render": {
+                "key": "MISSILE",
+                "rect": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 16,
+                    "h": 16
+                },
+                "layer": 1
+            }
+        },
+        "SUOTRON": {
+            "render": {
+                "key": "SUOTRON",
+                "rect": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 32,
+                    "h": 32
+                },
+                "layer": 1
+            },
+            "animator": {
+                "IDLE": {
+                    "loop": true,
+                    "animation": {
+                        "frames": 4,
+                        "duration": 0.2
+                    }
+                }
+            }
+        }
+    },
+    "spawns": [
+        {
+            "entity": "BACKGROUND"
+        }
+    ],
+    "keybinds": [
+        {
+            "move_up": "KEY_Z"
+        },
+        {
+            "move_left": "KEY_Q"
+        },
+        {
+            "move_down": "KEY_S"
+        },
+        {
+            "move_right": "KEY_D"
+        },
+        {
+            "shoot": "SPACE"
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "game": "./assets/configs/rtype.json",
+    "network": {
+        "host": "127.0.0.1",
+        "port": 4242,
+        "ticks": 64
+    },
+    "components": [],
+    "entities": {},
+    "spawns": []
+}

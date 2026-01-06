@@ -1,0 +1,179 @@
+{
+    "rules": {
+        "scroll_speed": 50
+    },
+    "entities": {
+        "PLAYER": {
+            "type": {
+                "ref": 1
+            },
+            "network": {
+                "id": -1
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "velocity": {
+                "x": 0,
+                "y": 0
+            },
+            "collider": {
+                "type": "player",
+                "size": {
+                    "w": 28,
+                    "h": 25
+                },
+                "offset": {
+                    "x": 4,
+                    "y": 7
+                }
+            },
+            "controllable": {
+                "speed": 10
+            },
+            "life": {
+                "health": 50,
+                "maxHealth": 50
+            },
+            "weapon": {
+                "projectile": "MISSILE"
+            }
+        },
+        "SKIMMER": {
+            "type": {
+                "ref": 1
+            },
+            "network": {
+                "id": -1
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "collider": {
+                "type": "enemy",
+                "size": {
+                    "w": 32,
+                    "h": 32
+                },
+                "offset": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "life": {
+                "health": 20,
+                "maxHealth": 20
+            },
+            "scale": {
+                "factor": 3
+            },
+            "damage": {
+                "factor": 20
+            }
+        },
+        "MISSILE": {
+            "type": {
+                "ref": 2
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "velocity": {
+                "x": 10,
+                "y": 0
+            },
+            "collider": {
+                "type": "bullet",
+                "size": {
+                    "w": 8,
+                    "h": 4
+                },
+                "offset": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "scale": {
+                "factor": 2.5
+            },
+            "damage": {
+                "factor": 25
+            }
+        },
+        "ENEMY_MISSILE": {
+            "type": {
+                "ref": 4
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "velocity": {
+                "x": -10,
+                "y": 0
+            },
+            "collider": {
+                "type": "enemy",
+                "size": {
+                    "w": 8,
+                    "h": 4
+                },
+                "offset": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "scale": {
+                "factor": 2.5
+            },
+            "damage": {
+                "factor": 10
+            }
+        },
+        "SUOTRON": {
+            "type": {
+                "ref": 3
+            },
+            "collider": {
+                "type": "enemy",
+                "size": {
+                    "w": 30,
+                    "h": 30
+                },
+                "offset": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "velocity": {
+                "x": 0,
+                "y": 2
+            },
+            "life": {
+                "health": 25,
+                "maxHealth": 25
+            },
+            "entity_ai": {
+                "min_y": 50,
+                "max_y": 450,
+                "frequency": 1.5
+            },
+            "weapon": {
+                "projectile": "ENEMY_MISSILE"
+            },
+            "scale": {
+                "factor": 2.5
+            },
+            "network": {
+                "id": -1
+            }
+        }
+    }
+}

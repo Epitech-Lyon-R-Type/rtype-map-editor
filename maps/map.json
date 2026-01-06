@@ -1,0 +1,17 @@
+{
+    "game": "./assets/configs/rtype.json",
+    "map": {
+        "height": 600,
+        "id": 2,
+        "scrollSpeed": 2.0,
+        "width": 800
+    },
+    "waves": [
+        {
+            "name": "PLAYER",
+            "ref": 1,
+            "x": 26.239999771118164,
+            "y": 96.31999969482422
+        }
+    ]
+}
