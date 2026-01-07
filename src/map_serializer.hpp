@@ -16,6 +16,8 @@ struct MapData {
     float scrollSpeed = 2.0F;
     int width = 800;
     int height = 600;
+    std::string backgroundName = "";  //Name of the background file
+    int backgroundRepeatCount = 1;    //how many time repeat the background
     std::vector<EntityData> entities;
     AssetRegistry assets;
 };

@@ -1,10 +1,16 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(RTypeMapEditor VERSION 1.0.0 LANGUAGES CXX)
+project(RTypeMapEditor VERSION 1.0.0 LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Find pkg-config
+find_package(PkgConfig REQUIRED)
+
+# Find GTK3 for tinyfiledialogs
+pkg_check_modules(GTK3 gtk+-3.0)
 
 # Use release version of raylib from buildtrees
 set(RAYLIB_LIBRARY "/home/hugo/R-Type/vcpkg/buildtrees/raylib/x64-linux-rel/raylib/libraylib.a")
@@ -26,6 +32,7 @@ set(SOURCES
     src/map_editor.cpp
     src/map_serializer.cpp
     src/config_loader.cpp
+    src/tinyfiledialogs.c
 )
 
 set(HEADERS
@@ -44,12 +51,14 @@ add_executable(rtype-map-editor ${SOURCES} ${HEADERS})
 target_include_directories(rtype-map-editor PRIVATE 
     ${RAYLIB_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${GTK3_INCLUDE_DIRS}
 )
 
 # Link libraries
 target_link_libraries(rtype-map-editor PRIVATE 
     ${RAYLIB_LIBRARY}
     ${GLFW_LIBRARY}
+    ${GTK3_LIBRARIES}
     GL
     m
     pthread

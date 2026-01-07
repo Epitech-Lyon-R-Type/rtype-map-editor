@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <iostream>
 #include <filesystem>
+#include "tinyfiledialogs.h"
 
 using namespace rtype::editor;
 
@@ -92,7 +93,7 @@ void MapEditor::loadAssets(const AssetRegistry& registry) {
         }
         
         if (!loaded) {
-            std::cerr << "✗ Texture file not found for " << key << ": " << info.spritePath << std::endl;
+            std::cerr << "Texture file not found for " << key << ": " << info.spritePath << std::endl;
         }
     }
     
@@ -125,6 +126,8 @@ void MapEditor::handleInput() {
         map.height = static_cast<int>(canvasHeight);
         map.entities = entities;
         map.assets = assetRegistry;
+        map.backgroundName = selectedBackground;
+        map.backgroundRepeatCount = backgroundRepeatCount;
         
         // Extract id from selected background filename ("background_2.png" -> 2)
         if (!selectedBackground.empty()) {
@@ -140,22 +143,55 @@ void MapEditor::handleInput() {
             }
         }
         
-        std::filesystem::create_directories("maps");
-        std::string path = "maps/map.json";
-        if (MapSerializer::saveMapToFile(path, map)) {
-            std::cout << "Saved map to " << path << " with id: " << map.id << std::endl;
-        } else {
-            std::cerr << "Failed to save map to " << path << std::endl;
+        // Open file dialog
+        const char* filterPatterns[1] = {"*.json"};
+        const char* savePath = tinyfd_saveFileDialog(
+            "Save Map",
+            "map.json",
+            1,
+            filterPatterns,
+            "JSON files"
+        );
+        
+        if (savePath) {
+            if (MapSerializer::saveMapToFile(savePath, map)) {
+                std::cout << "Saved map to " << savePath << " with id: " << map.id << std::endl;
+            } else {
+                std::cerr << "Failed to save map to " << savePath << std::endl;
+            }
         }
     }
     if (ctrlDown && IsKeyPressed(KEY_O)) {
-        std::string path = "maps/map.json";
-        MapData map = MapSerializer::loadMapFromFile(path);
-        entities = map.entities;
-        assetRegistry = map.assets.empty() ? assetRegistry : map.assets;
-        nextId = 0;
-        for (const auto& e : entities) nextId = std::max(nextId, e.id + 1);
-        std::cout << "Loaded map from " << path << " with " << entities.size() << " entities" << std::endl;
+        // Open file dialog
+        const char* filterPatterns[1] = {"*.json"};
+        const char* openPath = tinyfd_openFileDialog(
+            "Open Map",
+            ".",
+            1,
+            filterPatterns,
+            "JSON files",
+            0
+        );
+        
+        if (openPath) {
+            MapData map = MapSerializer::loadMapFromFile(openPath);
+            entities = map.entities;
+            assetRegistry = map.assets.empty() ? assetRegistry : map.assets;
+            nextId = 0;
+            for (const auto& e : entities) nextId = std::max(nextId, e.id + 1);
+            
+            // Apply loaded background
+            if (!map.backgroundName.empty()) {
+                auto it = backgroundTextures.find(map.backgroundName);
+                if (it != backgroundTextures.end()) {
+                    backgroundTexture = it->second;
+                    selectedBackground = map.backgroundName;
+                }
+            }
+            backgroundRepeatCount = map.backgroundRepeatCount;
+            
+            std::cout << "Loaded map from " << openPath << " with " << entities.size() << " entities" << std::endl;
+        }
     }
 
     // Left-side palette: click to select asset for dragging

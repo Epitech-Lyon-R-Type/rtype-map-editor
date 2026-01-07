@@ -23,7 +23,9 @@ std::string MapSerializer::mapToJson(const MapData& map) {
         {"id", map.id},
         {"scrollSpeed", map.scrollSpeed},
         {"width", map.width},
-        {"height", map.height}
+        {"height", map.height},
+        {"backgroundName", map.backgroundName},
+        {"backgroundRepeatCount", map.backgroundRepeatCount}
     };
     j["waves"] = json::array();
 
@@ -60,6 +62,8 @@ MapData MapSerializer::jsonToMap(const std::string& jsonStr) {
             map.scrollSpeed = meta.value("scrollSpeed", map.scrollSpeed);
             map.width = meta.value("width", map.width);
             map.height = meta.value("height", map.height);
+            map.backgroundName = meta.value("backgroundName", map.backgroundName);
+            map.backgroundRepeatCount = meta.value("backgroundRepeatCount", map.backgroundRepeatCount);
         } else {
             map.width = j.value("width", map.width);
             map.height = j.value("height", map.height);
