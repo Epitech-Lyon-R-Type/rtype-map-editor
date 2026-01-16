@@ -1,0 +1,21 @@
+{
+    "game": "config/game/client-rtype.json",
+    "sprites": {},
+    "startup": [],
+    "systems": [
+        "GameInteractionSystem",
+        "ScrollSystem",
+        "MovementSystem",
+        "HitboxSystem",
+        "ClearScreenSystem",
+        "DrawingStartSystem",
+        "BackgroundRenderingSystem",
+        "CameraStartSystem",
+        "HitboxRenderingSystem",
+        "RectRenderingSystem",
+        "SpriteRenderingSystem",
+        "TextRenderingSystem",
+        "CameraEndSystem",
+        "DrawingEndSystem"
+    ]
+}

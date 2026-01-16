@@ -13,4 +13,4 @@ public:
     static AssetRegistry loadAssetsFromConfig(const std::string& configPath);
 };
 
-} // namespace rtype::editor
+}

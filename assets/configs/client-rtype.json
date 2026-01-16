@@ -1,0 +1,159 @@
+{
+    "game": "config/game/rtype.json",
+    "sprites": {
+        "BACKGROUND": "assets/sprites/background.png",
+        "PLAYER": "assets/sprites/players.png",
+        "MISSILE": "assets/sprites/shoots.png",
+        "SUOTRON": "assets/sprites/suotron.png",
+        "POWER_UP": "assets/sprites/power_ups.png",
+        "ROCKER": "assets/sprites/rocker.png",
+        "ZIPPER": "assets/sprites/zipp.png",
+        "MANX": "assets/sprites/manx.png",
+        "BIT_UNIT": "assets/sprites/bit_unit.png",
+        "BOSS": "assets/sprites/boss.png",
+        "WALL": "assets/sprites/wall.png"
+    },
+    "sounds": {
+        "shoot": "assets/sounds/shot.mp3",
+        "explosion": "assets/sounds/explosion.mp3"
+    },
+    "entities": {
+        "WORLD": {
+            "camera": {
+                "zoom": 1.0,
+                "offset": { "x": 0, "y": 0 }
+            }
+        },
+        "BACKGROUND": {
+            "type": { "ref": 1 },
+            "position": { "x": 0, "y": 0 },
+            "background": {},
+            "rectangle": { "w": 6428, "h": 1080 },
+            "render": {
+                "key": "BACKGROUND",
+                "rect": { "x": 0, "y": 0, "w": 6428, "h": 1080 }
+            }
+        },
+        "PLAYER": {
+            "text": { "value": "Player1" },
+            "render": {
+                "key": "PLAYER",
+                "rect": { "x": 1, "y": 1, "w": 32, "h": 32 }
+            },
+            "animator": {
+                "IDLE": {
+                    "loop": false,
+                    "animation": { "frames": 1, "duration": 0.1 }
+                }
+            }
+        },
+        "PLAYER_MISSILE": {
+            "render": {
+                "key": "MISSILE",
+                "rect": { "x": 0, "y": 0, "w": 16, "h": 16 }
+            }
+        },
+        "PLAYER_BIG_MISSILE": {
+            "render": {
+                "key": "MISSILE",
+                "rect": { "x": 0, "y": 16, "w": 48, "h": 16 }
+            }
+        },
+        "PLAYER_TRACKING_MISSILE": {
+            "render": {
+                "key": "MISSILE",
+                "rect": { "x": 0, "y": 0, "w": 16, "h": 16 }
+            }
+        },
+        "SUOTRON": {
+            "render": {
+                "key": "SUOTRON",
+                "rect": { "x": 0, "y": 0, "w": 32, "h": 32 }
+            },
+            "animator": {
+                "IDLE": {
+                    "loop": true,
+                    "animation": { "frames": 4, "duration": 0.2 }
+                }
+            }
+        },
+        "SUOTRON_MISSILE": {
+            "render": {
+                "key": "SUOTRON",
+                "rect": { "x": 0, "y": 32, "w": 8, "h": 8 }
+            }
+        },
+        "ROCKER": {
+            "render": {
+                "key": "ROCKER",
+                "rect": { "x": 0, "y": 0, "w": 32, "h": 32 }
+            }
+        },
+        "ROCKER_MISSILE": {
+            "render": {
+                "key": "ROCKER",
+                "rect": { "x": 0, "y": 64, "w": 16, "h": 16 }
+            }
+        },
+        "BIT_UNIT": {
+            "render": {
+                "key": "BIT_UNIT",
+                "rect": { "x": 0, "y": 0, "w": 16, "h": 16 }
+            }
+        },
+        "ZIPP": {
+            "render": {
+                "key": "ZIPPER",
+                "rect": { "x": 0, "y": 0, "w": 16, "h": 16 }
+            }
+        },
+        "MANX": {
+            "render": {
+                "key": "MANX",
+                "rect": { "x": 0, "y": 0, "w": 32, "h": 32 }
+            }
+        },
+        "BIG_BOSS": {
+            "render": {
+                "key": "BOSS",
+                "rect": { "x": 0, "y": 0, "w": 160, "h": 216 }
+            }
+        },
+        "HEAD_BOSS": {
+            "render": {
+                "key": "BOSS",
+                "rect": { "x": 0, "y": 216, "w": 32, "h": 32 }
+            }
+        },
+        "BOSS_MISSILE": {
+            "render": {
+                "key": "BOSS",
+                "rect": { "x": 0, "y": 248, "w": 16, "h": 16 }
+            }
+        },
+        "WALL": {
+            "render": {
+                "key": "WALL",
+                "rect": { "x": 0, "y": 0, "w": 32, "h": 32 }
+            }
+        },
+        "HEAL_UP": {
+            "render": {
+                "key": "POWER_UP",
+                "rect": { "x": 64, "y": 0, "w": 32, "h": 32 }
+            }
+        },
+        "BIG_WEAPON_UP": {
+            "render": {
+                "key": "POWER_UP",
+                "rect": { "x": 32, "y": 0, "w": 32, "h": 32 }
+            }
+        },
+        "TRACKING_WEAPON_UP": {
+            "render": {
+                "key": "POWER_UP",
+                "rect": { "x": 0, "y": 0, "w": 32, "h": 32 }
+            }
+        }
+    }
+}

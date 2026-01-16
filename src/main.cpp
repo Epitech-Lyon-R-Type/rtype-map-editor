@@ -10,14 +10,15 @@
 using namespace rtype::editor;
 
 int main() {
-    // Try to load client.json from multiple locations
     std::string configPath;
     std::vector<std::string> candidatePaths = {
-        "../assets/configs/client.json",           // From build directory
-        "assets/configs/client.json",              // Current directory
-        "./assets/configs/client.json",            // Explicit current
-        "../../assets/configs/client.json",        // Two levels up
-        "/home/hugo/R-Type/assets/configs/client.json"
+        "assets/configs/client-rtype.json",        // map-editor config
+        "../assets/configs/client-rtype.json",     // from build directory
+        "../../assets/configs/client-rtype.json",  // two levels up
+        "../assets/configs/client.json",           // from build directory
+        "assets/configs/client.json",              // current directory
+        "./assets/configs/client.json",            // explicit current
+        "../../assets/configs/client.json",        // two levels up
     };
     
     for (const auto& path : candidatePaths) {
@@ -36,7 +37,6 @@ int main() {
         std::cerr << "Warning: Could not load client.json, using defaults" << std::endl;
     }
     
-    // Create and run editor
     MapEditor editor(1000, 700);
     editor.loadAssets(registry);
     editor.run();

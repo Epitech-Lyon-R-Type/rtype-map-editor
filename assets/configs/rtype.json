@@ -1,178 +1,364 @@
 {
-    "rules": {
-        "scroll_speed": 50
-    },
     "entities": {
+        "WORLD": {
+            "type": { "ref": 0 },
+            "viewport": { "w": 1920, "h": 1080 },
+            "scroll": { "speed": 125, "offset": 0 },
+            "position": { "x": 0, "y": 0 }
+        },
         "PLAYER": {
-            "type": {
-                "ref": 1
+            "type": { "ref": 10 },
+            "network": { "id": -1 },
+            "position": { "x": 0, "y": 0 },
+            "velocity": { "x": 0, "y": 0 },
+            "rectangle": { "w": 32, "h": 32 },
+            "hitbox": {
+                "type": "ally",
+                "margins": { "top": 9, "right": 0, "bottom": 9, "left": 0 },
+                "mask": [
+                    "enemy",
+                    "enemy_bullet",
+                    "pickup",
+                    "wall"
+                ]
             },
-            "network": {
-                "id": -1
-            },
-            "position": {
-                "x": 0,
-                "y": 0
-            },
-            "velocity": {
-                "x": 0,
-                "y": 0
-            },
-            "collider": {
-                "type": "player",
-                "size": {
-                    "w": 28,
-                    "h": 25
-                },
-                "offset": {
-                    "x": 4,
-                    "y": 7
-                }
-            },
-            "controllable": {
-                "speed": 10
-            },
-            "life": {
-                "health": 50,
-                "maxHealth": 50
-            },
+            "scale": { "factor": 3 },
+            "controllable": {},
+            "speed": { "speed": 500 },
+            "life": { "health": 50, "maxHealth": 50 },
             "weapon": {
-                "projectile": "MISSILE"
+                "projectile_ref": 11,
+                "fire_rate": 0.5,
+                "velocity": { "x": 500, "y": 0 }
             }
         },
-        "SKIMMER": {
-            "type": {
-                "ref": 1
+        "PLAYER_MISSILE": {
+            "type": { "ref": 11 },
+            "network": { "id": -1 },
+            "position": { "x": 0, "y": 0 },
+            "velocity": { "x": 0, "y": 0 },
+            "rectangle": { "w": 16, "h": 16 },
+            "range": { "range": 300 },
+            "rate": { "rate": 0.15 },
+            "hitbox": {
+                "type": "ally_bullet",
+                "margins": { "top": 0, "right": 0, "bottom": 0, "left": 0 },
+                "mask": [
+                    "enemy",
+                    "wall"
+                ]
             },
-            "network": {
-                "id": -1
-            },
-            "position": {
-                "x": 0,
-                "y": 0
-            },
-            "collider": {
-                "type": "enemy",
-                "size": {
-                    "w": 32,
-                    "h": 32
-                },
-                "offset": {
-                    "x": 0,
-                    "y": 0
-                }
-            },
-            "life": {
-                "health": 20,
-                "maxHealth": 20
-            },
-            "scale": {
-                "factor": 3
-            },
-            "damage": {
-                "factor": 20
-            }
+            "scale": { "factor": 4 },
+            "damage": { "factor": 10 }
         },
-        "MISSILE": {
-            "type": {
-                "ref": 2
+        "PLAYER_BIG_MISSILE": {
+            "type": { "ref": 12 },
+            "network": { "id": -1 },
+            "position": { "x": 0, "y": 0 },
+            "velocity": { "x": 0, "y": 0 },
+            "rectangle": { "w": 48, "h": 16 },
+            "range": { "range": 1000 },
+            "rate": { "rate": 0.15 },
+            "hitbox": {
+                "type": "ally_bullet",
+                "margins": { "top": 0, "right": 0, "bottom": 0, "left": 0 },
+                "mask": [
+                    "enemy"
+                ]
             },
-            "position": {
-                "x": 0,
-                "y": 0
-            },
-            "velocity": {
-                "x": 10,
-                "y": 0
-            },
-            "collider": {
-                "type": "bullet",
-                "size": {
-                    "w": 8,
-                    "h": 4
-                },
-                "offset": {
-                    "x": 0,
-                    "y": 0
-                }
-            },
-            "scale": {
-                "factor": 2.5
-            },
-            "damage": {
-                "factor": 25
-            }
+            "scale": { "factor": 4 },
+            "damage": { "factor": 10 }
         },
-        "ENEMY_MISSILE": {
-            "type": {
-                "ref": 4
+        "PLAYER_TRACKING_MISSILE": {
+            "type": { "ref": 13 },
+            "network": { "id": -1 },
+            "position": { "x": 0, "y": 0 },
+            "velocity": { "x": 0, "y": 0 },
+            "rectangle": { "w": 16, "h": 16 },
+            "range": { "range": 800 },
+            "rate": { "rate": 0.15 },
+            "hitbox": {
+                "type": "ally_bullet",
+                "margins": { "top": 0, "right": 0, "bottom": 0, "left": 0 },
+                "mask": [
+                    "enemy"
+                ]
             },
-            "position": {
-                "x": 0,
-                "y": 0
-            },
-            "velocity": {
-                "x": -10,
-                "y": 0
-            },
-            "collider": {
-                "type": "enemy",
-                "size": {
-                    "w": 8,
-                    "h": 4
-                },
-                "offset": {
-                    "x": 0,
-                    "y": 0
-                }
-            },
-            "scale": {
-                "factor": 2.5
-            },
-            "damage": {
-                "factor": 10
-            }
+            "scale": { "factor": 4 },
+            "damage": { "factor": 10 }
         },
         "SUOTRON": {
-            "type": {
-                "ref": 3
-            },
-            "collider": {
+            "type": { "ref": 20 },
+            "network": { "id": -1 },
+            "position": { "x": 0, "y": 0 },
+            "velocity": { "x": 0, "y": 0 },
+            "rectangle": { "w": 32, "h": 32 },
+            "speed": { "speed": 5 },
+            "hitbox": {
                 "type": "enemy",
-                "size": {
-                    "w": 30,
-                    "h": 30
-                },
-                "offset": {
-                    "x": 0,
-                    "y": 0
-                }
+                "margins": { "top": 6, "right": 4, "bottom": 6, "left": 4 },
+                "mask": [
+                    "ally",
+                    "ally_bullet"
+                ]
             },
-            "position": {
-                "x": 0,
-                "y": 0
+            "life": { "health": 25, "maxHealth": 25 },
+            "weapon": {
+                "projectile_ref": 21,
+                "fire_rate": 0.8,
+                "velocity": { "x": -100, "y": 0 }
             },
-            "velocity": {
-                "x": 0,
-                "y": 2
+            "scale": { "factor": 2.5 }
+        },
+        "SUOTRON_MISSILE": {
+            "type": { "ref": 21 },
+            "network": { "id": -1 },
+            "position": { "x": 0, "y": 0 },
+            "velocity": { "x": 0, "y": 0 },
+            "rectangle": { "w": 8, "h": 8 },
+            "range": { "range": 300 },
+            "rate": { "rate": 0.15 },
+            "hitbox": {
+                "type": "enemy_bullet",
+                "margins": { "top": 0, "right": 0, "bottom": 0, "left": 0 },
+                "mask": [
+                    "ally"
+                ]
             },
-            "life": {
-                "health": 25,
-                "maxHealth": 25
+            "scale": { "factor": 4 },
+            "damage": { "factor": 25 }
+        },
+        "ROCKER": {
+            "type": { "ref": 22 },
+            "network": { "id": -1 },
+            "position": { "x": 0, "y": 0 },
+            "velocity": { "x": 0, "y": 0 },
+            "rectangle": { "w": 32, "h": 32 },
+            "speed": { "speed": 50 },
+            "range": { "range": 500 },
+            "hitbox": {
+                "type": "enemy",
+                "margins": { "top": 6, "right": 1, "bottom": 1, "left": 0 },
+                "mask": [
+                    "ally",
+                    "ally_bullet"
+                ]
             },
-            "entity_ai": {
-                "min_y": 50,
-                "max_y": 450,
-                "frequency": 1.5
+            "life": { "health": 25, "maxHealth": 25 },
+            "weapon": {
+                "projectile_ref": 23,
+                "fire_rate": 1.5,
+                "velocity": { "x": -100, "y": 0 }
+            },
+            "scale": { "factor": 5 }
+        },
+        "ROCKER_MISSILE": {
+            "type": { "ref": 23 },
+            "network": { "id": -1 },
+            "position": { "x": 0, "y": 0 },
+            "velocity": { "x": 0, "y": 0 },
+            "rectangle": { "w": 16, "h": 16 },
+            "range": { "range": 300 },
+            "rate": { "rate": 0.15 },
+            "hitbox": {
+                "type": "enemy_bullet",
+                "margins": { "top": 5, "right": 5, "bottom": 5, "left": 5 },
+                "mask": [
+                    "ally"
+                ]
+            },
+            "scale": { "factor": 4 },
+            "damage": { "factor": 25 }
+        },
+        "BIT_UNIT": {
+            "type": { "ref": 24 },
+            "network": { "id": -1 },
+            "position": { "x": 0, "y": 0 },
+            "velocity": { "x": 0, "y": 0 },
+            "rectangle": { "w": 16, "h": 16 },
+            "speed": { "speed": 0 },
+            "hitbox": {
+                "type": "enemy",
+                "margins": { "top": 2, "right": 0, "bottom": 2, "left": 0 },
+                "mask": [
+                    "ally",
+                    "ally_bullet"
+                ]
+            },
+            "life": { "health": 1000, "maxHealth": 1000 },
+            "damage": { "factor": 10000 },
+            "scale": { "factor": 3 }
+        },
+        "ZIPP": {
+            "type": { "ref": 25 },
+            "network": { "id": -1 },
+            "position": { "x": 0, "y": 0 },
+            "velocity": { "x": 0, "y": 0 },
+            "rectangle": { "w": 16, "h": 16 },
+            "speed": { "speed": 250 },
+            "range": { "range": 1300 },
+            "rate": { "rate": 0.15 },
+            "hitbox": {
+                "type": "enemy_bullet",
+                "margins": { "top": 4, "right": 0, "bottom": 3, "left": 0 },
+                "mask": [
+                    "ally",
+                    "ally_bullet"
+                ]
+            },
+            "damage": { "factor": 10 },
+            "scale": { "factor": 3 }
+        },
+        "MANX": {
+            "type": { "ref": 26 },
+            "network": { "id": -1 },
+            "position": { "x": 0, "y": 0 },
+            "velocity": { "x": 0, "y": 0 },
+            "rectangle": { "w": 32, "h": 32 },
+            "speed": { "speed": 125 },
+            "hitbox": {
+                "type": "enemy",
+                "margins": { "top": 4, "right": 5, "bottom": 4, "left": 5 },
+                "mask": [
+                    "ally",
+                    "ally_bullet"
+                ]
+            },
+            "life": { "health": 10, "maxHealth": 10 },
+            "damage": { "factor": 10000 },
+            "scale": { "factor": 3 }
+        },
+        "BIG_BOSS": {
+            "type": { "ref": 27 },
+            "network": { "id": -1 },
+            "position": { "x": 0, "y": 0 },
+            "velocity": { "x": 0, "y": 0 },
+            "rectangle": { "w": 160, "h": 216 },
+            "speed": { "speed": 125 },
+            "hitbox": {
+                "type": "enemy",
+                "margins": { "top": 0, "right": 0, "bottom": 0, "left": 0 },
+                "mask": [
+                    "ally",
+                    "ally_bullet"
+                ]
+            },
+            "life": { "health": 1000, "maxHealth": 1000 },
+            "damage": { "factor": 10000 },
+            "scale": { "factor": 3 }
+        },
+        "HEAD_BOSS": {
+            "type": { "ref": 28 },
+            "network": { "id": -1 },
+            "position": { "x": 0, "y": 0 },
+            "velocity": { "x": 0, "y": 0 },
+            "rectangle": { "w": 32, "h": 32 },
+            "speed": { "speed": 0 },
+            "hitbox": {
+                "type": "enemy",
+                "margins": { "top": 0, "right": 0, "bottom": 0, "left": 0 },
+                "mask": [
+                    "ally",
+                    "ally_bullet"
+                ]
             },
             "weapon": {
-                "projectile": "ENEMY_MISSILE"
+                "projectile_ref": 29,
+                "fire_rate": 0.8,
+                "velocity": { "x": -200, "y": 0 }
             },
-            "scale": {
-                "factor": 2.5
+            "life": { "health": 100, "maxHealth": 100 },
+            "damage": { "factor": 10000 },
+            "scale": { "factor": 3.2 }
+        },
+        "BOSS_MISSILE": {
+            "type": { "ref": 29 },
+            "network": { "id": -1 },
+            "position": { "x": 0, "y": 0 },
+            "velocity": { "x": 0, "y": 0 },
+            "rectangle": { "w": 16, "h": 16 },
+            "range": { "range": 300 },
+            "rate": { "rate": 0.15 },
+            "hitbox": {
+                "type": "enemy_bullet",
+                "margins": { "top": 0, "right": 0, "bottom": 0, "left": 0 },
+                "mask": [
+                    "ally"
+                ]
             },
-            "network": {
-                "id": -1
+            "scale": { "factor": 4 },
+            "damage": { "factor": 25 }
+        },
+        "WALL": {
+            "type": { "ref": 30 },
+            "network": { "id": -1 },
+            "position": { "x": 0, "y": 0 },
+            "velocity": { "x": 0, "y": 0 },
+            "rectangle": { "w": 32, "h": 32 },
+            "hitbox": {
+                "type": "wall",
+                "margins": { "top": 0, "right": 0, "bottom": 0, "left": 0 },
+                "mask": [
+                    "ally",
+                    "ally_bullet"
+                ]
+            },
+            "scale": { "factor": 3 },
+            "life": { "health": 1000, "maxHealth": 1000 },
+            "damage": { "factor": 10000 }
+        },
+        "HEAL_UP": {
+            "type": { "ref": 90 },
+            "network": { "id": -1 },
+            "position": { "x": 0, "y": 0 },
+            "rectangle": { "w": 32, "h": 32 },
+            "hitbox": {
+                "type": "pickup",
+                "margins": { "top": 0, "right": 0, "bottom": 0, "left": 0 },
+                "mask": [
+                    "ally"
+                ]
+            },
+            "scale": { "factor": 3 },
+            "powerup": {
+                "type": "heal",
+                "value": 20
+            }
+        },
+        "BIG_WEAPON_UP": {
+            "type": { "ref": 91 },
+            "network": { "id": -1 },
+            "position": { "x": 0, "y": 0 },
+            "rectangle": { "w": 32, "h": 32 },
+            "hitbox": {
+                "type": "pickup",
+                "margins": { "top": 0, "right": 0, "bottom": 0, "left": 0 },
+                "mask": [
+                    "ally"
+                ]
+            },
+            "scale": { "factor": 3 },
+            "powerup": {
+                "type": "big_weapon",
+                "value": 12
+            }
+        },
+        "TRACKING_WEAPON_UP": {
+            "type": { "ref": 92 },
+            "network": { "id": -1 },
+            "position": { "x": 0, "y": 0 },
+            "rectangle": { "w": 32, "h": 32 },
+            "hitbox": {
+                "type": "pickup",
+                "margins": { "top": 0, "right": 0, "bottom": 0, "left": 0 },
+                "mask": [
+                    "ally"
+                ]
+            },
+            "scale": { "factor": 3 },
+            "powerup": {
+                "type": "ai_tracking",
+                "value": 13
             }
         }
     }

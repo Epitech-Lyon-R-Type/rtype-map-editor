@@ -181,4 +181,81 @@ std::unordered_map<int, std::string> MapSerializer::invertTypeRefs(const std::un
     return inverted;
 }
 
+bool MapSerializer::saveServerLevel(const std::string& filename, const MapData& map) {
+    try {
+        const std::string serverGameConfig = "config/game/rtype.json";
+        const auto typeRefs = loadTypeRefs(serverGameConfig);
+
+        nlohmann::json j;
+        j["game"] = serverGameConfig;
+        j["systems"] = nlohmann::json::array({
+            "ScrollSystem",
+            "WaveSystem",
+            "AISystem",
+            "MovementSystem",
+            "HitboxSystem",
+            "WeaponSystem",
+            "CleanupSystem"
+        });
+        j["spawn_points"] = nlohmann::json::array();
+        j["startup"] = nlohmann::json::array();
+
+        j["level_data"] = nlohmann::json::array();
+        for (const auto& e : map.entities) {
+            int ref = -1;
+            auto it = typeRefs.find(e.type);
+            if (it != typeRefs.end()) ref = it->second;
+            nlohmann::json entry;
+            entry["ref"] = ref;
+            entry["position"] = { {"x", e.x}, {"y", e.y} };
+            j["level_data"].push_back(entry);
+        }
+
+        std::ofstream file(filename);
+        if (!file.is_open()) return false;
+        file << j.dump(4);
+        file.close();
+        return true;
+    } catch (const std::exception& ex) {
+        std::cerr << "Error saving server level: " << ex.what() << std::endl;
+        return false;
+    }
+}
+
+// New: Save in client level format (minimal – no positions)
+bool MapSerializer::saveClientLevel(const std::string& filename, const MapData& map) {
+    try {
+        const std::string clientGameConfig = "config/game/client-rtype.json";
+        nlohmann::json j;
+        j["game"] = clientGameConfig;
+        j["systems"] = nlohmann::json::array({
+            "GameInteractionSystem",
+            "ScrollSystem",
+            "MovementSystem",
+            "HitboxSystem",
+            "ClearScreenSystem",
+            "DrawingStartSystem",
+            "BackgroundRenderingSystem",
+            "CameraStartSystem",
+            "HitboxRenderingSystem",
+            "RectRenderingSystem",
+            "SpriteRenderingSystem",
+            "TextRenderingSystem",
+            "CameraEndSystem",
+            "DrawingEndSystem"
+        });
+        j["sprites"] = nlohmann::json::object();
+        j["startup"] = nlohmann::json::array();
+
+        std::ofstream file(filename);
+        if (!file.is_open()) return false;
+        file << j.dump(4);
+        file.close();
+        return true;
+    } catch (const std::exception& ex) {
+        std::cerr << "Error saving client level: " << ex.what() << std::endl;
+        return false;
+    }
+}
+
 }

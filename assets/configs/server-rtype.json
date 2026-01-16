@@ -1,0 +1,61 @@
+{
+   "game": "./config/game/rtype.json",
+   "entities": {
+        "SUOTRON": {
+            "patterns": [
+                {
+                    "type": "vertical",
+                    "amplitude": 200,
+                    "speed": 50
+                },
+                {
+                    "type": "shoot_on_sight",
+                    "sight_range": 500,
+                    "sight_tolerance_y": 50
+                }
+            ]
+        },
+        "PLAYER_TRACKING_MISSILE": {
+            "patterns": [
+                {
+                    "type": "tracker",
+                    "tracking_delay": 2.0
+                }
+            ]
+        },
+        "ROCKER": {
+            "patterns": [
+                "guard"
+            ]
+        },
+        "ROCKER_MISSILE": {
+            "patterns": [
+                {
+                    "type": "tracker",
+                    "tracking_delay": 3.0
+                }
+            ]
+        },
+        "ZIPP": {
+            "patterns": [
+                {
+                    "type": "tracker",
+                    "tracking_delay": 5.0
+                }
+            ]
+        },
+        "MANX": {
+            "patterns": [
+                "patrol_attack"
+            ]
+        },
+        "HEAD_BOSS": {
+            "patterns": [
+                {
+                    "type": "boss",
+                    "stop_x": 1500
+                }
+            ]
+        }
+    }
+}

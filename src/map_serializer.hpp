@@ -28,6 +28,8 @@ public:
     static MapData loadMapFromFile(const std::string& filename);
     static std::string mapToJson(const MapData& map);
     static MapData jsonToMap(const std::string& jsonStr);
+    static bool saveServerLevel(const std::string& filename, const MapData& map);
+    static bool saveClientLevel(const std::string& filename, const MapData& map);
 private:
     static std::unordered_map<std::string, int> loadTypeRefs(const std::string& gameConfigPath);
     static std::unordered_map<int, std::string> invertTypeRefs(const std::unordered_map<std::string, int>& refs);

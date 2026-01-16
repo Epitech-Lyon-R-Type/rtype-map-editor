@@ -18,17 +18,12 @@ MapEditor::MapEditor(int width, int height)
 }
 
 MapEditor::~MapEditor() {
-    // Unload all textures
-    for (auto& [key, texture] : textures) {
+    for (auto& [key, texture] : textures)
         UnloadTexture(texture);
-    }
-    // Unload background textures
-    for (auto& [key, texture] : backgroundTextures) {
+    for (auto& [key, texture] : backgroundTextures)
         UnloadTexture(texture);
-    }
-    if (backgroundTexture.id != 0) {
+    if (backgroundTexture.id != 0)
         UnloadTexture(backgroundTexture);
-    }
     CloseWindow();
 }
 
@@ -43,7 +38,6 @@ void MapEditor::loadAssets(const AssetRegistry& registry) {
         for (const auto& entry : std::filesystem::directory_iterator(bgFolder)) {
             if (entry.is_regular_file()) {
                 std::string filename = entry.path().filename().string();
-                // Check if filename starts with "background"
                 if (filename.find("background") == 0) {
                     availableBackgrounds.push_back(filename);
                     // Preload background textures
@@ -57,21 +51,23 @@ void MapEditor::loadAssets(const AssetRegistry& registry) {
         }
     }
     
-    // Load textures for each asset
-    // Try multiple possible paths for asset location
+    // List of placeable assets to display in palette
+    std::vector<std::string> placeable = {
+        "PLAYER", "SUOTRON", "ROCKER", "BIT_UNIT", "ZIPP", "MANX", "BOSS", "WALL", "POWER_UP"
+    };
+    
     std::vector<std::string> possiblePaths = {
         "../",                         // Relative to build directory
         "./",                          // Current directory
         "../../",                      // Two levels up
         ""                             // Direct path (if already complete)
     };
+    
+    // Load textures for ALL assets in registry (to have dimensions for all)
     for (const auto& [key, info] : registry) {
-        availableAssets.push_back(key);
-        
         std::cout << "Trying to load " << key << " from: " << info.spritePath << std::endl;
         
         bool loaded = false;
-        // Try each possible path
         for (const auto& basePath : possiblePaths) {
             std::string fullPath = basePath + info.spritePath;
             
@@ -97,21 +93,24 @@ void MapEditor::loadAssets(const AssetRegistry& registry) {
         }
     }
     
+    for (const auto& assetName : placeable) {
+        if (assetRegistry.find(assetName) != assetRegistry.end())
+            availableAssets.push_back(assetName);
+    }
+    
     if (availableAssets.empty()) {
-        // Default assets
-        availableAssets = {"PLAYER", "SKIMMER", "MISSILE", "SUOTRON"};
+        availableAssets = {"PLAYER", "SUOTRON", "ROCKER", "WALL", "BIT_UNIT", "BOSS", "MANX", "POWER_UPS", "SHOOTS", "ZIPPER"};
     }
 }
 
 void MapEditor::handleInput() {
-    // Horizontal scroll with arrow keys
+    //horizontal scroll with arrow keys
     float scrollSpeed = 10.0f;
     if (IsKeyDown(KEY_LEFT))
         scrollOffsetX += scrollSpeed;
     if (IsKeyDown(KEY_RIGHT))
         scrollOffsetX -= scrollSpeed;
     
-    // Clamp scroll offset to prevent scrolling beyond map bounds
     if (backgroundTexture.id != 0) {
         float totalMapWidth = (backgroundTexture.width * mapScale) * backgroundRepeatCount;
         float maxScrollX = totalMapWidth - canvasWidth;
@@ -126,40 +125,25 @@ void MapEditor::handleInput() {
         map.height = static_cast<int>(canvasHeight);
         map.entities = entities;
         map.assets = assetRegistry;
-        map.backgroundName = selectedBackground;
-        map.backgroundRepeatCount = backgroundRepeatCount;
-        
-        // Extract id from selected background filename ("background_2.png" -> 2)
         if (!selectedBackground.empty()) {
             size_t underscorePos = selectedBackground.find('_');
             size_t dotPos = selectedBackground.find('.');
             if (underscorePos != std::string::npos && dotPos != std::string::npos && underscorePos < dotPos) {
                 std::string numberStr = selectedBackground.substr(underscorePos + 1, dotPos - underscorePos - 1);
-                try {
-                    map.id = std::stoi(numberStr);
-                } catch (...) {
-                    map.id = 1;
-                }
+                try { map.id = std::stoi(numberStr); } catch (...) { map.id = 1; }
             }
         }
-        
-        // Open file dialog
-        const char* filterPatterns[1] = {"*.json"};
-        const char* savePath = tinyfd_saveFileDialog(
-            "Save Map",
-            "map.json",
-            1,
-            filterPatterns,
-            "JSON files"
-        );
-        
-        if (savePath) {
-            if (MapSerializer::saveMapToFile(savePath, map)) {
-                std::cout << "Saved map to " << savePath << " with id: " << map.id << std::endl;
-            } else {
-                std::cerr << "Failed to save map to " << savePath << std::endl;
-            }
-        }
+
+        std::filesystem::create_directories("maps");
+        std::string serverPath = "maps/level_" + std::to_string(map.id) + "-server.json";
+        std::string clientPath = "maps/level_" + std::to_string(map.id) + "-client.json";
+
+        bool okServer = MapSerializer::saveServerLevel(serverPath, map);
+        bool okClient = MapSerializer::saveClientLevel(clientPath, map);
+        if (okServer) std::cout << "Saved server level to " << serverPath << std::endl;
+        else std::cerr << "Failed to save server level to " << serverPath << std::endl;
+        if (okClient) std::cout << "Saved client level to " << clientPath << std::endl;
+        else std::cerr << "Failed to save client level to " << clientPath << std::endl;
     }
     if (ctrlDown && IsKeyPressed(KEY_O)) {
         // Open file dialog
@@ -194,7 +178,7 @@ void MapEditor::handleInput() {
         }
     }
 
-    // Left-side palette: click to select asset for dragging
+    //leftside palette: click to select asset for dragging
     float paletteX = 5;
     float paletteY = 40;
     float itemHeight = 50;
@@ -207,7 +191,7 @@ void MapEditor::handleInput() {
         }
     }
     
-    // Background selection
+    //background selection
     float bgStartY = paletteY + availableAssets.size() * itemHeight + 20;
     for (size_t i = 0; i < availableBackgrounds.size(); ++i) {
         Rectangle bgRect = {paletteX, bgStartY + i * itemHeight, paletteWidth - 10, itemHeight - 5};
@@ -221,7 +205,7 @@ void MapEditor::handleInput() {
         }
     }
     
-    // Map length control (repeat count)
+    //mmap length control (repeat count)
     float repeatStartY = bgStartY + availableBackgrounds.size() * itemHeight + 20;
     Rectangle minusBtn = {paletteX, repeatStartY + 20, 30, 30};
     Rectangle plusBtn = {paletteX + 110, repeatStartY + 20, 30, 30};
@@ -233,7 +217,7 @@ void MapEditor::handleInput() {
         backgroundRepeatCount = std::min(10, backgroundRepeatCount + 1);
     }
     
-    // Drop on canvas
+    //drop on canvas
     if (isDragging && IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
         Vector2 mousePos = GetMousePosition();
         Rectangle canvasRect = {canvasX, canvasY, canvasWidth, canvasHeight};
@@ -241,7 +225,6 @@ void MapEditor::handleInput() {
             EntityData e;
             e.id = nextId++;
             e.type = draggingAsset;
-            // Account for scroll offset and map scale
             e.x = (mousePos.x - canvasX - scrollOffsetX) / mapScale;
             e.y = (mousePos.y - canvasY) / mapScale;
             entities.push_back(e);
@@ -250,7 +233,7 @@ void MapEditor::handleInput() {
         draggingAsset.clear();
     }
     
-    // Click entity to select
+    //click entity to select
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !isDragging) {
         Vector2 mousePos = GetMousePosition();
         if (CheckCollisionPointRec(mousePos, {canvasX, canvasY, canvasWidth, canvasHeight})) {
@@ -259,7 +242,7 @@ void MapEditor::handleInput() {
         }
     }
     
-    // Drag selected entity
+    //drag selected entity
     if (selectedId != -1 && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
         Vector2 mousePos = GetMousePosition();
         auto it = std::find_if(entities.begin(), entities.end(), 
@@ -270,7 +253,7 @@ void MapEditor::handleInput() {
         }
     }
     
-    // Delete selected entity
+    //delete selected entity
     if (selectedId != -1 && IsKeyPressed(KEY_DELETE)) {
         auto it = std::find_if(entities.begin(), entities.end(),
             [this](const EntityData& e) { return e.id == selectedId; });
@@ -285,26 +268,26 @@ void MapEditor::draw() {
     BeginDrawing();
     ClearBackground(DARKGRAY);
     
-    //Title
+    //title
     DrawText("R-Type Map Editor", canvasX + 10, 5, 20, WHITE);
     
-    //Left palette
+    //left palette
     float paletteX = 5;
     float paletteY = 40;
     float itemHeight = 50;
     
-    //Palette background
+    //palette background
     DrawRectangle(0, 0, paletteWidth, screenHeight, {40, 40, 40, 255});
     DrawRectangleLinesEx({0, 0, paletteWidth, screenHeight}, 2, WHITE);
     DrawText("Assets", paletteX + 5, 10, 14, WHITE);
     
-    // Draw assets in palette
+    //draw assets in palette
     for (size_t i = 0; i < availableAssets.size(); ++i) {
         Rectangle itemRect = {paletteX, paletteY + i * itemHeight, paletteWidth - 10, itemHeight - 5};
         DrawRectangleRec(itemRect, DARKGRAY);
         DrawRectangleLinesEx(itemRect, 1, LIGHTGRAY);
         
-        //Draw texture preview in palette
+        //draw texture preview in palette
         auto texIt = textures.find(availableAssets[i]);
         if (texIt != textures.end()) {
             auto regIt = assetRegistry.find(availableAssets[i]);
@@ -316,7 +299,7 @@ void MapEditor::draw() {
             }
         }
         
-        // Draw asset name
+        //draw asset name
         std::string assetName = availableAssets[i];
         if (assetName.length() > 6) {
             assetName = assetName.substr(0, 6) + ".";
@@ -324,14 +307,14 @@ void MapEditor::draw() {
         DrawText(assetName.c_str(), paletteX + 45, paletteY + i * itemHeight + 17, 9, WHITE);
     }
     
-    //BACKGROUNDS SECTION
+    //backgrounds section
     float bgStartY = paletteY + availableAssets.size() * itemHeight + 20;
     DrawText("Backgrounds", paletteX + 5, bgStartY - 15, 12, WHITE);
     
     for (size_t i = 0; i < availableBackgrounds.size(); ++i) {
         Rectangle bgRect = {paletteX, bgStartY + i * itemHeight, paletteWidth - 10, itemHeight - 5};
         
-        // Highlight selected background
+        //highlight selected background
         if (availableBackgrounds[i] == selectedBackground) {
             DrawRectangleRec(bgRect, {100, 150, 255, 100});
         } else {
@@ -339,7 +322,7 @@ void MapEditor::draw() {
         }
         DrawRectangleLinesEx(bgRect, 1, LIGHTGRAY);
         
-        // Draw background preview thumbnail
+        //draw background preview thumbnail
         auto bgIt = backgroundTextures.find(availableBackgrounds[i]);
         if (bgIt != backgroundTextures.end()) {
             Rectangle sourceRec = {0, 0, (float)bgIt->second.width, (float)bgIt->second.height};
@@ -347,7 +330,7 @@ void MapEditor::draw() {
             DrawTexturePro(bgIt->second, sourceRec, destRec, {0, 0}, 0.0f, WHITE);
         }
         
-        // Draw background name
+        //draw background name
         std::string bgName = availableBackgrounds[i];
         if (bgName.length() > 10) {
             bgName = bgName.substr(0, 9) + ".";
@@ -355,30 +338,29 @@ void MapEditor::draw() {
         DrawText(bgName.c_str(), paletteX + 42, bgStartY + i * itemHeight + 17, 8, WHITE);
     }
     
-    // ===== MAP LENGTH CONTROL =====
+    // ===== map length control =====
     float repeatStartY = bgStartY + availableBackgrounds.size() * itemHeight + 20;
     DrawText("Map Length", paletteX + 5, repeatStartY, 12, WHITE);
     
-    // Minus button
+    //minus button
     Rectangle minusBtn = {paletteX, repeatStartY + 20, 30, 30};
     DrawRectangleRec(minusBtn, DARKGRAY);
     DrawRectangleLinesEx(minusBtn, 1, LIGHTGRAY);
     DrawText("-", paletteX + 11, repeatStartY + 25, 20, WHITE);
     
-    // Display repeat count
+    //display repeat count
     DrawText(TextFormat("x%d", backgroundRepeatCount), paletteX + 40, repeatStartY + 27, 14, WHITE);
     
-    // Plus button
+    //plus button
     Rectangle plusBtn = {paletteX + 110, repeatStartY + 20, 30, 30};
     DrawRectangleRec(plusBtn, DARKGRAY);
     DrawRectangleLinesEx(plusBtn, 1, LIGHTGRAY);
     DrawText("+", paletteX + 120, repeatStartY + 25, 20, WHITE);
     
     //MAIN CANVAS
-    // Enable clipping to prevent drawing outside canvas area
+    //enable clipping to prevent drawing outside canvas area
     BeginScissorMode(canvasX, canvasY, canvasWidth, canvasHeight);
     
-    // Canvas background - draw repeated instances of texture scaled to fit canvas height
     if (backgroundTexture.id != 0) {
         float texWidth = static_cast<float>(backgroundTexture.width);
         float texHeight = static_cast<float>(backgroundTexture.height);
@@ -389,7 +371,6 @@ void MapEditor::draw() {
         
         Rectangle sourceRec = {0, 0, texWidth, texHeight};
         
-        // Draw multiple instances based on repeat count
         for (int i = 0; i < backgroundRepeatCount; ++i) {
             Rectangle destRec = {
                 canvasX + scrollOffsetX + (i * scaledTexWidth), 
@@ -403,7 +384,7 @@ void MapEditor::draw() {
         DrawRectangle(canvasX, canvasY, canvasWidth, canvasHeight, BLACK);
     }
     
-    // Draw entities
+    //draw entities
     for (const auto& e : entities) {
         int size = 32;
         auto regIt = assetRegistry.find(e.type);
@@ -414,7 +395,7 @@ void MapEditor::draw() {
         float x = canvasX + e.x * mapScale + scrollOffsetX;
         float y = canvasY + e.y * mapScale;
         
-        // Draw texture if available, otherwise rectangle
+        //draw texture if available, otherwise rectangle
         auto texIt = textures.find(e.type);
         if (texIt != textures.end()) {
             Texture2D& tex = texIt->second;
@@ -423,11 +404,11 @@ void MapEditor::draw() {
             
             DrawTexturePro(tex, sourceRec, destRec, {0, 0}, 0.0f, WHITE);
             
-            //Highlight if selected in yellow
+            //highlight if selected in yellow
             if (e.id == selectedId)
                 DrawRectangleLinesEx(destRec, 3, YELLOW);
         } else {
-            // Fallback to rectangle if no texture
+            // fallback to rectangle if no texture
             Rectangle rect = {x - size/2.0f, y - size/2.0f, (float)size, (float)size};
             
             if (e.id == selectedId) {
@@ -442,10 +423,10 @@ void MapEditor::draw() {
         }
     }
     
-    //Disable clipping
+    //disable clipping
     EndScissorMode();
     
-    // Draw dragging preview (outside clipping to show on palette)
+    //draw dragging preview (outside clipping to show on palette)
     if (isDragging) {
         Vector2 mousePos = GetMousePosition();
         auto texIt = textures.find(draggingAsset);

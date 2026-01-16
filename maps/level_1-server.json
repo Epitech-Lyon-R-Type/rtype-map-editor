@@ -1,0 +1,44 @@
+{
+    "game": "config/game/rtype.json",
+    "level_data": [
+        {
+            "position": {
+                "x": 59.39999771118164,
+                "y": 196.1999969482422
+            },
+            "ref": -1
+        },
+        {
+            "position": {
+                "x": 509.39996337890625,
+                "y": 158.39999389648438
+            },
+            "ref": -1
+        },
+        {
+            "position": {
+                "x": 516.5999755859375,
+                "y": 311.3999938964844
+            },
+            "ref": -1
+        },
+        {
+            "position": {
+                "x": 718.199951171875,
+                "y": 368.9999694824219
+            },
+            "ref": -1
+        }
+    ],
+    "spawn_points": [],
+    "startup": [],
+    "systems": [
+        "ScrollSystem",
+        "WaveSystem",
+        "AISystem",
+        "MovementSystem",
+        "HitboxSystem",
+        "WeaponSystem",
+        "CleanupSystem"
+    ]
+}

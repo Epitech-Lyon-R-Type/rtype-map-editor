@@ -16,4 +16,4 @@ struct AssetInfo {
 
 using AssetRegistry = std::unordered_map<std::string, AssetInfo>;
 
-} // namespace rtype::editor
+}
