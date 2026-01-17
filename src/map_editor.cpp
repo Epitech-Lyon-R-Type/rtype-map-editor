@@ -4,6 +4,7 @@
 */
 #include "map_editor.hpp"
 #include "map_serializer.hpp"
+#include "tinyfiledialogs.h"
 #include <algorithm>
 #include <iostream>
 #include <filesystem>
@@ -135,18 +136,38 @@ void MapEditor::handleInput() {
         }
 
         std::filesystem::create_directories("maps");
-        std::string serverPath = "maps/level_" + std::to_string(map.id) + "-server.json";
-        std::string clientPath = "maps/level_" + std::to_string(map.id) + "-client.json";
-
-        bool okServer = MapSerializer::saveServerLevel(serverPath, map);
-        bool okClient = MapSerializer::saveClientLevel(clientPath, map);
-        if (okServer) std::cout << "Saved server level to " << serverPath << std::endl;
-        else std::cerr << "Failed to save server level to " << serverPath << std::endl;
-        if (okClient) std::cout << "Saved client level to " << clientPath << std::endl;
-        else std::cerr << "Failed to save client level to " << clientPath << std::endl;
+        
+        const char* filterPatterns[1] = {"*.json"};
+        char defaultName[256];
+        snprintf(defaultName, sizeof(defaultName), "level_%d-server.json", map.id);
+        
+        const char* savePath = tinyfd_saveFileDialog(
+            "Save Server Level",
+            defaultName,
+            1,
+            filterPatterns,
+            "JSON files"
+        );
+        
+        if (savePath) {
+            bool okServer = MapSerializer::saveServerLevel(savePath, map);
+            if (okServer) std::cout << "Saved server level to " << savePath << std::endl;
+            else std::cerr << "Failed to save server level to " << savePath << std::endl;
+            
+            //also have client file
+            std::string clientPath = std::string(savePath);
+            size_t lastDot = clientPath.rfind('.');
+            if (lastDot != std::string::npos) {
+                clientPath = clientPath.substr(0, lastDot);
+            }
+            clientPath += "-client.json";
+            
+            bool okClient = MapSerializer::saveClientLevel(clientPath, map);
+            if (okClient) std::cout << "Saved client level to " << clientPath << std::endl;
+            else std::cerr << "Failed to save client level to " << clientPath << std::endl;
+        }
     }
     if (ctrlDown && IsKeyPressed(KEY_O)) {
-        // Open file dialog
         const char* filterPatterns[1] = {"*.json"};
         const char* openPath = tinyfd_openFileDialog(
             "Open Map",
@@ -164,7 +185,6 @@ void MapEditor::handleInput() {
             nextId = 0;
             for (const auto& e : entities) nextId = std::max(nextId, e.id + 1);
             
-            // Apply loaded background
             if (!map.backgroundName.empty()) {
                 auto it = backgroundTextures.find(map.backgroundName);
                 if (it != backgroundTextures.end()) {
